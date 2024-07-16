@@ -4,5 +4,5 @@ export const PG_DATA_SOURCE = 'PG_DATA_SOURCE';
  *
  * Repositories
  */
-export const ITEM_REPOSITORY = 'ITEM_REPOSITORY';
 export const ORGANIZATION_REPOSITORY = 'ORGANIZATION_REPOSITORY';
+export const USER_REPOSITORY = 'USER_REPOSITORY';

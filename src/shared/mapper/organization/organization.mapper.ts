@@ -1,11 +1,13 @@
 import { OrganizationDao } from 'src/database/entity';
 import { Organization } from 'src/domain/entity/organization';
 import {
-  MutateCustomerDTO,
+  MutateOrganizationDTO,
   OrganizationDTO,
 } from 'src/dto/organization/organization.dto';
 import { fromDateToTimestamp, fromTimestampToDate } from '../utils.mapper';
-export const fromEntityToRest = (arg?: Organization): OrganizationDTO => ({
+export const fromOrganizationEntityToRest = (
+  arg?: Organization,
+): OrganizationDTO => ({
   id: arg?.id,
   name: arg?.name,
   description: arg?.description,
@@ -14,31 +16,33 @@ export const fromEntityToRest = (arg?: Organization): OrganizationDTO => ({
   updatedDate: fromTimestampToDate(arg?.createdDate),
 });
 
-export const fromEntitiesToRest = (
+export const fromOrganizationEntitiesToRest = (
   args?: Organization[],
 ): OrganizationDTO[] => {
-  return args.map(fromEntityToRest);
+  return args.map(fromOrganizationEntityToRest);
 };
 
-export const fromMutateRestToEntity = (
-  arg?: MutateCustomerDTO,
+export const fromOrganizationMutateRestToEntity = (
+  arg?: MutateOrganizationDTO,
 ): Organization => ({
   id: arg?.id,
   name: arg?.name,
   description: arg?.description,
   email: arg?.email,
-  createdDate: undefined,
-  updatedDate: undefined,
 });
 
-export const fromEntityToDao = (arg?: Organization): OrganizationDao =>
+export const fromOrganizationEntityToDao = (
+  arg?: Organization,
+): OrganizationDao =>
   new OrganizationDao()
     .set('id', arg?.id)
     .set('name', arg?.name)
     .set('description', arg.description)
     .set('email', arg?.email);
 
-export const fromEntityDaoToEntity = (arg?: OrganizationDao): Organization => ({
+export const fromOrganizationEntityDaoToEntity = (
+  arg?: OrganizationDao,
+): Organization => ({
   id: arg?.id,
   name: arg?.name,
   description: arg?.description,
@@ -47,8 +51,8 @@ export const fromEntityDaoToEntity = (arg?: OrganizationDao): Organization => ({
   updatedDate: fromDateToTimestamp(arg?.updatedAt),
 });
 
-export const fromEntitiesDaoToEntities = (
+export const fromOrganizationEntitiesDaoToEntities = (
   args?: OrganizationDao[],
 ): Organization[] => {
-  return args.map(fromEntityDaoToEntity);
+  return args.map(fromOrganizationEntityDaoToEntity);
 };

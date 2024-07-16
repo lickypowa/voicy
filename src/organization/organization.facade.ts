@@ -6,33 +6,54 @@ import { IService } from 'src/shared/inteface/service.interface';
 import { Organization } from 'src/domain/entity/organization';
 import { OrganizationDao } from 'src/database/entity';
 import {
-  fromEntityDaoToEntity,
-  fromEntityToDao,
+  fromOrganizationEntitiesDaoToEntities,
+  fromOrganizationEntityDaoToEntity,
+  fromOrganizationEntityToDao,
 } from 'src/shared/mapper/organization/organization.mapper';
 
 export class OrganizationFacade implements IFacade<Organization> {
   constructor(
     @Inject(ORGANIZATION_SERVICE_KEY)
-    protected readonly service: IService<OrganizationDao>,
+    protected readonly organizationService: IService<OrganizationDao>,
   ) {}
 
   create(entity: Organization): Observable<Organization> {
-    return this.service.create(fromEntityToDao(entity)).pipe(
-      map((res) => {
-        return fromEntityDaoToEntity(res);
-      }),
-    );
+    return this.organizationService
+      .create(fromOrganizationEntityToDao(entity))
+      .pipe(
+        map((res) => {
+          return fromOrganizationEntityDaoToEntity(res);
+        }),
+      );
   }
   update(id: number, entity: Organization): Observable<Organization> {
-    throw new Error('Method not implemented.');
+    if (id !== entity.id) {
+      throw new Error('Invalid organization id provided');
+    }
+    return this.organizationService
+      .update(
+        fromOrganizationEntityToDao({
+          ...entity,
+          id: id,
+        }),
+      )
+      .pipe(
+        map((res) => {
+          return fromOrganizationEntityDaoToEntity(res);
+        }),
+      );
   }
   delete(ids: number[]): Observable<void> {
-    throw new Error('Method not implemented.');
+    return this.organizationService.delete(ids);
   }
   get(id: number): Observable<Organization> {
-    throw new Error('Method not implemented.');
+    return this.organizationService
+      .get(id)
+      .pipe(map(fromOrganizationEntityDaoToEntity));
   }
-  getAll(): Observable<[Organization[], number]> {
-    throw new Error('Method not implemented.');
+  getAll(): Observable<Organization[]> {
+    return this.organizationService
+      .getAll()
+      .pipe(map(fromOrganizationEntitiesDaoToEntities));
   }
 }

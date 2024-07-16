@@ -5,5 +5,5 @@ export interface IService<T> {
   update(entity: T): Observable<T>;
   delete(ids: number[]): Observable<void>;
   get(id: number): Observable<T>;
-  getAll(): Observable<[T[], number]>;
+  getAll(): Observable<T[]>;
 }
