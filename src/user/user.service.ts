@@ -3,7 +3,7 @@ import { catchError, from, Observable } from 'rxjs';
 import { UserDao } from 'src/database/entity';
 import { USER_REPOSITORY } from 'src/database/shared/constants/database';
 import { AbstractService } from 'src/database/utils/abstract.dao';
-import { EntityNotFoundError } from 'src/shared/error/entity-not-found';
+import { EntityNotFoundError } from 'src/error/entity-not-found';
 import { Repository } from 'typeorm';
 
 @Injectable()

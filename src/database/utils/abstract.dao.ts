@@ -3,8 +3,8 @@ import { Base } from '../shared/abstract.entity';
 import { catchError, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { Repository, TypeORMError } from 'typeorm';
 import { filterBuilder } from 'src/shared/filter/utils';
-import { EntityNotFoundError } from 'src/shared/error/entity-not-found';
 import { BaseFilter } from 'src/domain/entity/base.filter';
+import { EntityNotFoundError } from 'src/error/entity-not-found';
 
 export abstract class AbstractService<T extends Base> implements IService<T> {
   constructor(protected repository: Repository<T>) {}
