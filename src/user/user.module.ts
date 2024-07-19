@@ -8,9 +8,14 @@ import {
   userProviders,
 } from './user.provider';
 import { UserFacade } from './user.facade';
+import { JwtStrategy } from 'src/strategy/jwt.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { AUTH_SERVICE_KEY } from 'src/auth/auth.provider';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, PassportModule],
   controllers: [UserController],
   providers: [
     {
@@ -21,7 +26,11 @@ import { UserFacade } from './user.facade';
       provide: USER_SERVICE_KEY,
       useClass: UserService,
     },
+    { provide: AUTH_SERVICE_KEY, useClass: AuthService },
     ...userProviders,
+    JwtStrategy,
+    JwtService,
   ],
+  exports: [USER_SERVICE_KEY],
 })
 export class UserModule {}

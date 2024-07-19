@@ -1,8 +1,5 @@
 import { BaseDTO, BaseMutateDTO } from '../base.dto';
-import {
-  MutateOrganizationDTO,
-  OrganizationDTO,
-} from '../organization/organization.dto';
+import { OrganizationDTO } from '../organization/organization.dto';
 
 export interface UserDTO extends BaseDTO<number> {
   name: string;
@@ -17,5 +14,5 @@ export interface MutateUserDTO extends BaseMutateDTO<number> {
   surname: string;
   email: string;
   password: string;
-  organization: MutateOrganizationDTO;
+  organizationId: number;
 }

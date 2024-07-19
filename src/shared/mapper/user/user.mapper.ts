@@ -4,10 +4,14 @@ import {
   fromOrganizationEntityDaoToEntity,
   fromOrganizationEntityToDao,
   fromOrganizationEntityToRest,
-  fromOrganizationMutateRestToEntity,
 } from '../organization/organization.mapper';
 import { UserDao } from 'src/database/entity';
-import { fromDateToTimestamp, fromTimestampToDate } from '../utils.mapper';
+import {
+  fromDateToTimestamp,
+  fromTimestampToDate,
+  getEntity,
+  safeGet,
+} from '../utils.mapper';
 
 export const fromUserEntityToRest = (arg?: User): UserDTO => ({
   id: arg?.id,
@@ -30,7 +34,7 @@ export const fromUserMutateRestToEntity = (arg?: MutateUserDTO): User => ({
   surname: arg?.surname,
   email: arg?.email,
   password: arg?.password,
-  organization: fromOrganizationMutateRestToEntity(arg?.organization),
+  organization: getEntity(arg?.organizationId),
 });
 
 export const fromUserEntityToDao = (arg?: User): UserDao =>
@@ -40,9 +44,13 @@ export const fromUserEntityToDao = (arg?: User): UserDao =>
     .set('surname', arg?.surname)
     .set('email', arg?.email)
     .set('password', arg?.password)
-    .set('organization', fromOrganizationEntityToDao(arg?.organization));
+    .set(
+      'organization',
+      safeGet(arg?.organization, fromOrganizationEntityToDao),
+    );
 
 export const fromUserEntityDaoToEntity = (arg?: UserDao): User => ({
+  id: arg?.id,
   name: arg?.name,
   surname: arg?.surname,
   email: arg?.email,

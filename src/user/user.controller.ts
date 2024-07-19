@@ -9,6 +9,7 @@ import {
   Inject,
   ParseArrayPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDTO } from 'src/dto/user/create.user.dto';
 import { UpdateUserDTO } from 'src/dto/user/update.user.dto';
@@ -30,9 +31,12 @@ import {
   fromUserMutateRestToEntity,
 } from 'src/shared/mapper/user/user.mapper';
 import { USER_API } from 'src/shared/constants';
+import { BaseFilter } from 'src/domain/entity/base.filter';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
 @ApiTags(USER_API)
 @Controller(USER_API)
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(
     @Inject(USER_FACADE_KEY)
@@ -59,8 +63,8 @@ export class UserController {
     status: 200,
     description: 'Return all users.',
   })
-  findAll() {
-    return this.userFacade.getAll();
+  findAll(@Query() filters?: BaseFilter) {
+    return this.userFacade.getAll(filters);
   }
 
   @Get(':id')
@@ -75,8 +79,8 @@ export class UserController {
     description: 'Return the user with the specified ID.',
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  findOne(@Param('id') id: string) {
-    return this.userFacade.get(+id);
+  findOne(@Param('id') id: string, @Query() filters?: BaseFilter) {
+    return this.userFacade.getBy(+id, filters);
   }
 
   @Patch(':id')
@@ -93,7 +97,10 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDTO) {
-    return this.userFacade.update(+id, updateUserDto);
+    return this.userFacade.update(
+      +id,
+      fromUserMutateRestToEntity(updateUserDto),
+    );
   }
 
   @Delete()

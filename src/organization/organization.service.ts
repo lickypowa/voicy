@@ -8,8 +8,8 @@ import { Repository } from 'typeorm';
 export class OrganizationService extends AbstractService<Organization> {
   constructor(
     @Inject(ORGANIZATION_REPOSITORY)
-    protected readonly organizationRepository: Repository<Organization>,
+    protected readonly repository: Repository<Organization>,
   ) {
-    super(organizationRepository);
+    super(repository);
   }
 }

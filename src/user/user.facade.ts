@@ -10,6 +10,7 @@ import {
   fromUserEntitiesDaoToEntities,
 } from 'src/shared/mapper/user/user.mapper';
 import { UserDao } from 'src/database/entity';
+import { BaseFilter } from 'src/domain/entity/base.filter';
 
 export class UserFacade implements IFacade<User> {
   constructor(
@@ -44,10 +45,14 @@ export class UserFacade implements IFacade<User> {
   delete(ids: number[]): Observable<void> {
     return this.userService.delete(ids);
   }
-  get(id: number): Observable<User> {
-    return this.userService.get(id).pipe(map(fromUserEntityDaoToEntity));
+  getBy(id: number, filters?: BaseFilter): Observable<User> {
+    return this.userService
+      .getBy(id, filters)
+      .pipe(map(fromUserEntityDaoToEntity));
   }
-  getAll(): Observable<User[]> {
-    return this.userService.getAll().pipe(map(fromUserEntitiesDaoToEntities));
+  getAll(filters?: BaseFilter): Observable<User[]> {
+    return this.userService
+      .getAll(filters)
+      .pipe(map(fromUserEntitiesDaoToEntities));
   }
 }

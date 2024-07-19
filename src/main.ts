@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { UniqueConstraintFilter } from './shared/filter/unique.constraint.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger();
@@ -15,6 +16,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  app.useGlobalFilters(new UniqueConstraintFilter());
 
   await app.listen(3000, () => {
     app

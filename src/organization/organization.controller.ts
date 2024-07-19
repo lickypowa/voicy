@@ -9,6 +9,7 @@ import {
   Query,
   ParseArrayPipe,
   Inject,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -30,9 +31,12 @@ import { Organization } from 'src/domain/entity/organization';
 import { ORGANIZATION_API } from 'src/shared/constants';
 import { CreateOrganizationDTO } from 'src/dto/organization/create.organization.dto';
 import { UpdateOranizationDTO } from 'src/dto/organization/update.organization.dto';
+import { BaseFilter } from 'src/domain/entity/base.filter';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
 @ApiTags(ORGANIZATION_API)
 @Controller(ORGANIZATION_API)
+@UseGuards(JwtAuthGuard)
 export class OrganizationController {
   constructor(
     @Inject(ORGANIZATION_SERVICE_KEY)
@@ -62,8 +66,8 @@ export class OrganizationController {
     description: 'Return all organizations.',
     isArray: true,
   })
-  findAll() {
-    return this.facade.getAll();
+  findAll(@Query() filters?: BaseFilter) {
+    return this.facade.getAll(filters);
   }
 
   @Get(':id')
@@ -78,8 +82,8 @@ export class OrganizationController {
     description: 'Return the organization with the specified ID.',
   })
   @ApiResponse({ status: 404, description: 'Organization not found.' })
-  findOne(@Param('id') id: string) {
-    return this.facade.get(+id);
+  findOne(@Param('id') id: string, @Query() filters?: BaseFilter) {
+    return this.facade.getBy(+id, filters);
   }
 
   @Patch(':id')

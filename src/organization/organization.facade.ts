@@ -10,6 +10,7 @@ import {
   fromOrganizationEntityDaoToEntity,
   fromOrganizationEntityToDao,
 } from 'src/shared/mapper/organization/organization.mapper';
+import { BaseFilter } from 'src/domain/entity/base.filter';
 
 export class OrganizationFacade implements IFacade<Organization> {
   constructor(
@@ -46,14 +47,14 @@ export class OrganizationFacade implements IFacade<Organization> {
   delete(ids: number[]): Observable<void> {
     return this.organizationService.delete(ids);
   }
-  get(id: number): Observable<Organization> {
+  getBy(id: number, filters?: BaseFilter): Observable<Organization> {
     return this.organizationService
-      .get(id)
+      .getBy(id, filters)
       .pipe(map(fromOrganizationEntityDaoToEntity));
   }
-  getAll(): Observable<Organization[]> {
+  getAll(filters?: BaseFilter): Observable<Organization[]> {
     return this.organizationService
-      .getAll()
+      .getAll(filters)
       .pipe(map(fromOrganizationEntitiesDaoToEntities));
   }
 }

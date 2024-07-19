@@ -1,7 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AUTH_API } from 'src/shared/constants';
+import { AUTH_SERVICE_KEY } from './auth.provider';
+import { AuthDTO } from 'src/dto/auth/auth.dto';
 
-@Controller('auth')
+@Controller(AUTH_API)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject(AUTH_SERVICE_KEY) protected readonly authService: AuthService,
+  ) {}
+
+  @Post('login')
+  login(@Body() auth: AuthDTO) {
+    return this.authService.login(auth);
+  }
 }

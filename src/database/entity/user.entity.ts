@@ -1,4 +1,10 @@
-import { Column, DeleteDateColumn, Entity, OneToOne } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { Base } from '../shared/abstract.entity';
 import { Organization } from './organization.entity';
 
@@ -10,13 +16,16 @@ export class User extends Base {
   @Column()
   surname: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ nullable: false })
   password: string;
 
-  @OneToOne(() => Organization, { nullable: true })
+  @ManyToOne(() => Organization, (organization) => organization.users, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'organization_id' })
   organization?: Organization;
 
   @DeleteDateColumn({ name: 'delete_date', nullable: true })
