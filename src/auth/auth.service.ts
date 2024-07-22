@@ -98,6 +98,12 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  /**
+   *
+   * @param token
+   * @param userId
+   * @param oldToken
+   */
   async storeRefreshToken(token: string, userId, oldToken?: string) {
     const expiryDate = new Date();
     expiryDate.setDate(new Date().getDate() + 3);
@@ -109,6 +115,11 @@ export class AuthService {
     }
   }
 
+  /**
+   *
+   * @param token
+   * @returns
+   */
   async refreshToken({ token }: RefreshTokenDTO) {
     const foundToken = await lastValueFrom(
       this.tokenService.findOne(token).pipe(map((token) => token)),
