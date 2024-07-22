@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable, switchMap } from 'rxjs';
 import { User } from 'src/domain/entity/user';
 import { IFacade } from 'src/shared/inteface/facade.interace';
 import { USER_SERVICE_KEY } from './user.provider';
@@ -11,6 +11,7 @@ import {
 } from 'src/shared/mapper/user/user.mapper';
 import { UserDao } from 'src/database/entity';
 import { BaseFilter } from 'src/domain/entity/base.filter';
+import * as bcrypt from 'bcrypt';
 
 export class UserFacade implements IFacade<User> {
   constructor(
@@ -19,12 +20,20 @@ export class UserFacade implements IFacade<User> {
   ) {}
 
   create(entity: User): Observable<User> {
-    return this.userService.create(fromUserEntityToDao(entity)).pipe(
-      map((res) => {
-        return fromUserEntityDaoToEntity(res);
-      }),
+    const { password, ...user } = entity;
+    return from(bcrypt.hash(password, 10)).pipe(
+      switchMap((cryptedPassword) =>
+        this.userService.create(
+          fromUserEntityToDao({
+            ...user,
+            password: cryptedPassword,
+          }),
+        ),
+      ),
+      map((res) => fromUserEntityDaoToEntity(res)),
     );
   }
+
   update(id: number, entity: User): Observable<User> {
     if (id !== entity.id) {
       throw new Error('Invalid User id provided');

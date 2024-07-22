@@ -13,9 +13,10 @@ import { PassportModule } from '@nestjs/passport';
 import { AUTH_SERVICE_KEY } from 'src/auth/auth.provider';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
-  imports: [DatabaseModule, PassportModule],
+  imports: [DatabaseModule, PassportModule, TokenModule],
   controllers: [UserController],
   providers: [
     {
